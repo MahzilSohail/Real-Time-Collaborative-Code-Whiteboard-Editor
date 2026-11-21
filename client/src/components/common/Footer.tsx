@@ -34,15 +34,6 @@ export const Footer: React.FC = () => {
               >
                 <GitFork className="w-4 h-4" />
               </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noreferrer"
-                className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
-                title="Twitter"
-              >
-                <Globe className="w-4 h-4" />
-              </a>
             </div>
           </div>
 
@@ -126,9 +117,7 @@ export const Footer: React.FC = () => {
             &copy; {year} CollabSpace. All rights reserved.
           </p>
           <p className="flex items-center gap-1.5 text-xs text-slate-500">
-            Built with
-            <Heart className="w-3 h-3 text-rose-500 fill-rose-500" />
-            using React, Socket.IO &amp; TypeScript
+            Built by Mahzil Sohail using React, Socket.IO &amp; TypeScript
           </p>
         </div>
       </div>

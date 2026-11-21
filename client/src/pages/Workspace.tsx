@@ -160,14 +160,17 @@ export const Workspace: React.FC = () => {
     };
   }, [addToast, loadDocumentDetails, docId]);
 
-  // Setup Real-time WebSocket connection
+  // Refs to hold latest values without re-triggering socket effect
+  const isChatOpenRef = useRef(isChatOpen);
+  const documentTypeRef = useRef(document?.type);
+  useEffect(() => { isChatOpenRef.current = isChatOpen; }, [isChatOpen]);
+  useEffect(() => { documentTypeRef.current = document?.type; }, [document?.type]);
+
+  // Setup Real-time WebSocket connection — only re-runs when docId or user changes
   useEffect(() => {
     if (!docId || !user) return;
 
     const socket = getSocket();
-    if (!socket.connected) {
-      socket.connect();
-    }
 
     const joinRoom = () => {
       socket.emit('doc:join', { docId });
@@ -217,7 +220,8 @@ export const Workspace: React.FC = () => {
 
     socket.on('chat:message', (msg: ChatMessage) => {
       setMessages((prev) => [...prev, msg]);
-      if (!isChatOpen) {
+      // Use ref to avoid re-creating socket listeners when chat panel toggles
+      if (!isChatOpenRef.current) {
         setUnreadChatCount((count) => count + 1);
       }
     });
@@ -229,7 +233,8 @@ export const Workspace: React.FC = () => {
         return { ...prev, content: data.content, language: data.language };
       });
 
-      if (document?.type === 'whiteboard') {
+      // Use ref to avoid re-creating socket listeners when document type is loaded
+      if (documentTypeRef.current === 'whiteboard') {
         try {
           setWhiteboardElements(JSON.parse(data.content || '[]'));
         } catch {}
@@ -266,7 +271,8 @@ export const Workspace: React.FC = () => {
       socket.off('notification:toast');
       socket.off('error:forbidden');
     };
-  }, [docId, user, addToast, isChatOpen, document?.type]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [docId, user?.id, addToast]);
 
   // Code change emitter
   const handleCodeChange = (newContent: string) => {

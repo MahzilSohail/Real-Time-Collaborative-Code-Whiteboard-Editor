@@ -1,7 +1,9 @@
 import { io, Socket } from 'socket.io-client';
 
-// Connects via current host proxy to eliminate cross-origin connection issues
-const SOCKET_URL = window.location.origin;
+// In production (Vercel), Vercel cannot proxy WebSocket upgrades — connect directly to backend.
+// In development, Vite's proxy handles /socket.io so we use window.location.origin.
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const SOCKET_URL = BACKEND_URL || window.location.origin;
 
 let socketInstance: Socket | null = null;
 
@@ -15,6 +17,8 @@ export function getSocket(): Socket {
       reconnection: true,
       reconnectionAttempts: 10,
       reconnectionDelay: 1000,
+      // Always try WebSocket first; fall back to polling only if needed
+      transports: ['websocket', 'polling'],
     });
   } else if (token) {
     socketInstance.auth = { token };

@@ -6,13 +6,16 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Ensure db directory exists
-const dbDir = path.resolve(__dirname, '../../data');
+// Use DATABASE_PATH env var (Railway persistent volume) or fall back to local data dir
+const dbPath = process.env.DATABASE_PATH
+  ? path.resolve(process.env.DATABASE_PATH)
+  : path.join(path.resolve(__dirname, '../../data'), 'collab.sqlite');
+
+// Ensure the directory for the db file exists
+const dbDir = path.dirname(dbPath);
 if (!fs.existsSync(dbDir)) {
   fs.mkdirSync(dbDir, { recursive: true });
 }
-
-const dbPath = path.join(dbDir, 'collab.sqlite');
 export const db = new DatabaseSync(dbPath);
 
 // Enable WAL mode and foreign keys for high performance and integrity

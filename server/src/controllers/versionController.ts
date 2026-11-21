@@ -6,7 +6,7 @@ import { updateLiveDocState } from '../socket/socketHandler.js';
 
 export function getVersions(req: AuthRequest, res: Response): void {
   try {
-    const docId = req.params.id;
+    const docId = req.params.id as string;
 
     const versions = db.prepare(`
       SELECT 
@@ -28,7 +28,7 @@ export function getVersions(req: AuthRequest, res: Response): void {
 
 export function createSnapshot(req: AuthRequest, res: Response): void {
   try {
-    const docId = req.params.id;
+    const docId = req.params.id as string;
     const userId = req.user!.id;
     const { description } = req.body;
 
@@ -91,8 +91,8 @@ export function createSnapshot(req: AuthRequest, res: Response): void {
 
 export function restoreVersion(req: AuthRequest, res: Response): void {
   try {
-    const docId = req.params.id;
-    const versionId = req.params.versionId;
+    const docId = req.params.id as string;
+    const versionId = req.params.versionId as string;
     const userId = req.user!.id;
 
     if (req.docRole === 'viewer') {

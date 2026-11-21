@@ -51,7 +51,7 @@ export function getDocuments(req: AuthRequest, res: Response): void {
 export function getDocumentById(req: AuthRequest, res: Response): void {
   try {
     const userId = req.user!.id;
-    const docId = req.params.id;
+    const docId = req.params.id as string;
 
     const doc = db.prepare(`
       SELECT 
@@ -156,7 +156,7 @@ export function createDocument(req: AuthRequest, res: Response): void {
 
 export function updateDocument(req: AuthRequest, res: Response): void {
   try {
-    const docId = req.params.id;
+    const docId = req.params.id as string;
     const { title, language, content } = req.body;
     const now = Date.now();
 
@@ -186,7 +186,7 @@ export function updateDocument(req: AuthRequest, res: Response): void {
 
 export function deleteDocument(req: AuthRequest, res: Response): void {
   try {
-    const docId = req.params.id;
+    const docId = req.params.id as string;
     const userId = req.user!.id;
 
     // Check ownership
@@ -215,7 +215,7 @@ export function deleteDocument(req: AuthRequest, res: Response): void {
 
 export function duplicateDocument(req: AuthRequest, res: Response): void {
   try {
-    const docId = req.params.id;
+    const docId = req.params.id as string;
     const userId = req.user!.id;
 
     const source = db.prepare('SELECT * FROM documents WHERE id = ?').get(docId) as DocumentItem | undefined;
@@ -250,7 +250,7 @@ export function duplicateDocument(req: AuthRequest, res: Response): void {
 
 export async function shareDocument(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const docId = req.params.id;
+    const docId = req.params.id as string;
     const inviterId = req.user!.id;
     const inviterName = req.user!.name;
     const { email, role = 'editor' } = req.body;
@@ -337,8 +337,8 @@ export async function shareDocument(req: AuthRequest, res: Response): Promise<vo
 
 export function removeCollaborator(req: AuthRequest, res: Response): void {
   try {
-    const docId = req.params.id;
-    const targetUserId = req.params.userId;
+    const docId = req.params.id as string;
+    const targetUserId = req.params.userId as string;
     const currentUserId = req.user!.id;
 
     const doc = db.prepare('SELECT owner_id FROM documents WHERE id = ?').get(docId) as { owner_id: string } | undefined;
@@ -358,8 +358,8 @@ export function removeCollaborator(req: AuthRequest, res: Response): void {
 
 export function updateCollaboratorRole(req: AuthRequest, res: Response): void {
   try {
-    const docId = req.params.id;
-    const targetUserId = req.params.userId;
+    const docId = req.params.id as string;
+    const targetUserId = req.params.userId as string;
     const currentUserId = req.user!.id;
     const { role } = req.body;
 
@@ -385,7 +385,7 @@ export function updateCollaboratorRole(req: AuthRequest, res: Response): void {
 
 export function updateAccessLevel(req: AuthRequest, res: Response): void {
   try {
-    const docId = req.params.id;
+    const docId = req.params.id as string;
     const currentUserId = req.user!.id;
     const { accessLevel } = req.body;
 

@@ -231,8 +231,8 @@ export async function login(req: Request, res: Response): Promise<void> {
 
 export function getCurrentUser(req: AuthRequest, res: Response): void {
   try {
-    const userId = req.user?.id;
-    const user = db.prepare('SELECT id, name, email, avatar, color, created_at FROM users WHERE id = ?').get(userId) as User | undefined;
+    const userId = req.user!.id;
+    const user = db.prepare('SELECT id, name, email, avatar, color, created_at FROM users WHERE id = ?').get(userId) as unknown as User | undefined;
 
     if (!user) {
       res.status(404).json({ error: 'User not found.' });
@@ -247,7 +247,7 @@ export function getCurrentUser(req: AuthRequest, res: Response): void {
 
 export function updateProfile(req: AuthRequest, res: Response): void {
   try {
-    const userId = req.user?.id;
+    const userId = req.user!.id;
     const { name, avatar, color } = req.body;
 
     if (!name || name.trim().length === 0) {
@@ -262,7 +262,7 @@ export function updateProfile(req: AuthRequest, res: Response): void {
       WHERE id = ?
     `).run(name.trim(), avatar || null, color || '#6366f1', now, userId);
 
-    const updated = db.prepare('SELECT id, name, email, avatar, color FROM users WHERE id = ?').get(userId) as User;
+    const updated = db.prepare('SELECT id, name, email, avatar, color FROM users WHERE id = ?').get(userId) as unknown as User;
 
     // Issue updated token
     const token = generateToken({

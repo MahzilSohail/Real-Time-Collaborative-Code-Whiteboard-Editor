@@ -35,7 +35,7 @@ function transpileAndRunCpp(code: string): string {
   // Convert functions: type name(type a, type b) { ... }
   s = s.replace(/\b(?:int|void|double|float|long|short|char|bool|string|auto)\s+([a-zA-Z_]\w*)\s*\(([^)]*)\)\s*\{/g, (match, funcName, params) => {
     if (['if', 'for', 'while', 'switch', 'catch'].includes(funcName)) return match;
-    const cleanParams = params.split(',').map(p => {
+    const cleanParams = params.split(',').map((p: string) => {
       const parts = p.trim().split(/\s+/);
       return parts[parts.length - 1].replace(/[*&]/g, '');
     }).filter(Boolean).join(', ');
@@ -132,7 +132,7 @@ function transpileAndRunJava(code: string): string {
   // Convert other methods: static <type> <name>(<params>) {
   s = s.replace(/(?:public\s+|private\s+|protected\s+)?static\s+(?:void|int|double|float|long|short|char|boolean|String)\s+([a-zA-Z_]\w*)\s*\(([^)]*)\)\s*\{/g, (match, funcName, params) => {
     if (['if', 'for', 'while', 'switch', 'catch'].includes(funcName)) return match;
-    const cleanParams = params.split(',').map(p => {
+    const cleanParams = params.split(',').map((p: string) => {
       const parts = p.trim().split(/\s+/);
       return parts[parts.length - 1].replace(/\[\]/g, '');
     }).filter(Boolean).join(', ');

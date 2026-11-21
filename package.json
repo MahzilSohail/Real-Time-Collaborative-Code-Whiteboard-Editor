@@ -1,0 +1,21 @@
+{
+  "name": "realtime-collaborative-code-and-whiteboard-editor",
+  "version": "1.0.0",
+  "description": "Production-grade Real-Time Collaborative Code & Whiteboard Editor with WebSockets, CRDT/OT Sync, Role-Based Access, and Version History",
+  "scripts": {
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm run dev",
+    "test:backend": "cd server && npm test",
+    "test:load": "cd server && npm run load-test",
+    "build:client": "cd client && npm run build"
+  },
+  "keywords": [
+    "real-time",
+    "collaborative",
+    "code-editor",
+    "whiteboard",
+    "monaco-editor",
+    "socket.io",
+    "websockets"
+  ]
+}
